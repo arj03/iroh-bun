@@ -1,0 +1,40 @@
+{
+  "name": "iroh-bun",
+  "version": "1.0.0",
+  "description": "iroh 1.0 QUIC p2p for Node and Bun — a thin prebuilt native addon (endpoints, connections, bi-streams)",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "0BSD",
+  "napi": {
+    "name": "iroh-bun",
+    "triples": {
+      "defaults": true,
+      "additional": [
+        "aarch64-apple-darwin",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-unknown-linux-musl",
+        "x86_64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "artifacts": "napi artifacts",
+    "prepublishOnly": "napi prepublish -t npm",
+    "universal": "napi universal",
+    "version": "napi version"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.18.4"
+  },
+  "optionalDependencies": {}
+}
