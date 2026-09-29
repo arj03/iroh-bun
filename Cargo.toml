@@ -1,8 +1,8 @@
 [package]
 name = "iroh-bun"
-version = "1.0.0"
+version = "1.3.0"
 edition = "2026"
-description = "Thin napi-rs wrapper around iroh 1.0 — QUIC p2p endpoints, connections and bi-streams, usable from Node and Bun"
+description = "Thin napi-rs wrapper around iroh 1.3 — QUIC p2p endpoints, connections and bi-streams, usable from Node and Bun"
 license = "0BSD"
 
 [lib]
@@ -15,11 +15,13 @@ crate-type = ["cdylib"]
 napi = { version = "2", default-features = false, features = ["napi6", "tokio_rt"] }
 napi-derive = "2"
 
-# iroh 1.0 — the QUIC p2p stack. Keep default features on for the native build:
-# they pull in n0 discovery + relay support, which `presets::N0` and dial-by-id
-# rely on. (The `default-features = false` advice is for the size-constrained
-# wasm/browser build only — not relevant here.)
-iroh = "1.0"
+# iroh 1.x — the QUIC p2p stack. Discovery and relay (used by `presets::N0` and
+# dial-by-id) are not feature-gated. Default features add `metrics`, `portmapper`
+# (UPnP/NAT-PMP, helps direct connections behind NATs), `fast-apple-datapath`
+# and `tls-ring`. Turning them off (`default-features = false, features =
+# ["tls-ring"]`) saves only ~0.8 MB on top of the release profile below and
+# loses port mapping, so we keep them.
+iroh = "1.3"
 
 tokio = { version = "1", features = ["sync", "io-util"] }
 hex = "0.4"
@@ -29,9 +31,12 @@ napi-build = "2"
 
 [profile.release]
 lto = true
-# iroh pulls in a large dependency tree; opt-level 2 keeps compile time saner than 3
-# for negligible runtime difference in a thin I/O wrapper.
-opt-level = 2
-# Ship a stripped artifact (~11.5 MB vs ~13.7 MB unstripped); debug symbols are
-# dead weight in a published prebuilt .node.
+# Optimize for size: this is a thin I/O wrapper where network latency dominates,
+# so the speed difference vs opt-level 2/3 is negligible, while the binary shrinks
+# ~36% (Linux x64, iroh 1.3.0: 10.4 MiB -> 6.7 MiB with codegen-units = 1).
+opt-level = "z"
+# One codegen unit lets LLVM optimize (and dedupe) across the whole crate; slower
+# to compile, smaller output.
+codegen-units = 1
+# Debug symbols are dead weight in a published prebuilt .node.
 strip = true

@@ -1,4 +1,4 @@
-//! iroh-bun — a thin napi-rs wrapper around iroh 1.0.
+//! iroh-bun — a thin napi-rs wrapper around iroh 1.3.
 //!
 //! This is deliberately a *leaf* binding: it exposes iroh's QUIC primitives
 //! (endpoint, connection, bidirectional byte streams) to JavaScript and nothing
@@ -7,8 +7,8 @@
 //!
 //! Why a wrapper at all: core iroh ships no prebuilt client library — only the
 //! `iroh-relay` / `iroh-dns-server` infra binaries — and the community napi
-//! binding lags the core crate. Compiling this ~one file against `iroh = "1.0"`
-//! is the only way to get exactly-1.0 in-process for Node/Bun. The build happens
+//! binding lags the core crate. Compiling this ~one file against `iroh = "1.3"`
+//! is the only way to get the current iroh in-process for Node/Bun. The build happens
 //! once in CI; consumers install a prebuilt `.node` and never touch Rust.
 //!
 //! ## Identity

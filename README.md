@@ -69,7 +69,8 @@ matrix cross-builds them and `napi prepublish` pushes the platform packages plus
 this root package to npm. Consumers then `bun add iroh-bun` and the loader pulls
 the matching prebuilt — no Rust.
 
-The binaries are roughly 11.5MB large.
+The binaries are roughly 7MB large (6.7 MiB on Linux x64 with iroh 1.3.0; the
+release profile optimizes for size).
 
 ## `bun build --compile` (single native binary)
 
